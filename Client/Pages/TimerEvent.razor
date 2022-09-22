@@ -1,0 +1,30 @@
+﻿@using System.Timers
+@using Blazor.WasmSample.Shared
+@implements IDisposable
+
+<h3>Timer Event</h3>
+
+@code {
+    [Parameter]
+    public int DelaySeconds { get; set; } = 10;
+    [Parameter]
+    public EventCallback<TimerEventArgs> OnTimerCallback { get; set; }
+
+    public void Start() => timer?.Start();
+    public void Stop() => timer?.Stop();
+    private Timer? timer;
+
+    protected override void OnInitialized()
+    {
+        timer = new()
+            {
+                Interval = 1000 * DelaySeconds
+            };
+        timer.Elapsed += async (sender, e) =>
+        {
+            await OnTimerCallback.InvokeAsync(new TimerEventArgs { SignalTime = e.SignalTime });
+        };
+    }
+    public void Dispose() => timer?.Dispose();
+
+}

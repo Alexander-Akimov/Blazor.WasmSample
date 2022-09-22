@@ -1,0 +1,49 @@
+﻿@page "/usetimer"
+@using Blazor.WasmSample.Shared
+<h3>UseTimer</h3>
+
+<p role="status">@timeMessage</p>
+
+<TimerEvent @ref="myTimer" DelaySeconds="1" OnTimerCallback="@ShowTimer" />
+<button class="btn btn-primary" @onclick="StartTimer" disabled="@disableStartTimerButton">Start</button>
+<button class="btn btn-primary" @onclick="StopTimer" disabled="@disableStopTimerButton">Stop</button>
+<button class="btn btn-primary" @onclick="Clear">Clear</button>
+<p role="status">@message</p>
+
+@code {
+    private TimerEvent? myTimer;
+    private string timeMessage = string.Empty;
+    private bool disableStartTimerButton = false;
+    private bool disableStopTimerButton = true;
+    string message = string.Empty;
+
+    private void ShowTimer(TimerEventArgs e)
+    {
+        message += ".";
+        timeMessage = e.SignalTime.ToLongTimeString();
+    }
+
+    private void StartTimer()
+    {
+        //myTimer?.Start();
+        //DisableStartTimerButton();
+
+    }
+
+    private void StopTimer()
+    {
+        myTimer?.Stop();
+        DisableStartTimerButton(false);
+    }
+
+    private void Clear()
+    {
+        message = timeMessage = string.Empty;
+    }
+
+    private void DisableStartTimerButton(bool isDisabled = true)
+    {
+        this.disableStartTimerButton = isDisabled;
+        this.disableStopTimerButton = !isDisabled;
+    }
+}
