@@ -3,6 +3,7 @@
 @implements IDisposable
 
 <h3>Timer Event</h3>
+<p>@counter</p>
 
 @code {
     [Parameter]
@@ -14,6 +15,8 @@
     public void Stop() => timer?.Stop();
     private Timer? timer;
 
+    private int counter = 0;
+
     protected override void OnInitialized()
     {
         timer = new()
@@ -22,6 +25,7 @@
             };
         timer.Elapsed += async (sender, e) =>
         {
+            counter++;
             await OnTimerCallback.InvokeAsync(new TimerEventArgs { SignalTime = e.SignalTime });
         };
     }
